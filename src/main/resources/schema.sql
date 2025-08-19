@@ -1,32 +1,28 @@
 CREATE TABLE IF NOT EXISTS vault (
-    id INTEGER PRIMARY KEY,
+    id INTEGER,
     usd DOUBLE,
     gold DOUBLE
 );
-
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    telegram_id BIGINT UNIQUE,
-    username TEXT,
-    gold_balance DOUBLE DEFAULT 0,
-    real_usd_balance DOUBLE DEFAULT 0,
-    expected_usd_total DOUBLE DEFAULT 0,
-    authorized BOOLEAN DEFAULT FALSE
+CREATE TABLE IF NOT EXISTS config (
+    id INTEGER,
+    auth_password VARCHAR,
+    admin_id BIGINT
 );
-
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER,
+    telegram_id BIGINT,
+    username VARCHAR,
+    gold_balance DOUBLE,
+    real_usd_balance DOUBLE,
+    expected_usd_total DOUBLE,
+    authorized BOOLEAN
+);
 CREATE TABLE IF NOT EXISTS invoices (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER,
     user_id INTEGER,
-    contract_name TEXT,
+    contract_name VARCHAR,
     gold DOUBLE,
     expected_usd DOUBLE,
     received_usd DOUBLE,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id)
-);
-
-CREATE TABLE IF NOT EXISTS config (
-    id INTEGER PRIMARY KEY,
-    auth_password TEXT,
-    admin_id BIGINT
+    timestamp TIMESTAMP
 );

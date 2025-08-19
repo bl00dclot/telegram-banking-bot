@@ -16,7 +16,7 @@ A private **Telegram banking bot** for managing a central vault (USD + Gold), us
 ## 🚀 Tech Stack
 - Java 17+
 - [TelegramBots API](https://github.com/rubenlagus/TelegramBots)
-- SQLite database (lightweight & simple)
+- DuckDB
 
 ---
 
