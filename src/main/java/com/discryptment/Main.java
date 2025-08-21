@@ -9,7 +9,7 @@ import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 public class Main {
     public static void main(String[] args) {
         Database.initSchema();
-        EnvReader.init("src/main/resources", "bot-token.env");
+        EnvReader.init("src/main/resources", ".env");
         String botToken = EnvReader.get("BOT_TOKEN");
         // Using try-with-resources to allow autoclose to run upon finishing
         try (TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication()) {
