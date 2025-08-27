@@ -1,6 +1,9 @@
 package com.discryptment;
 
 import com.discryptment.bot.BankingBot;
+import com.discryptment.commands.CommandContext;
+import com.discryptment.commands.CommandDispatcher;
+import com.discryptment.commands.user.StartCommand;
 import com.discryptment.db.Database;
 import com.discryptment.db.dao.UserDao;
 import com.discryptment.db.dao.UserDaoImpl;
@@ -24,11 +27,29 @@ public class Main {
         TelegramBotsLongPollingApplication botsApi = new TelegramBotsLongPollingApplication();
         // Using try-with-resources to allow autoclose to run upon finishing
         try {
-
+            //DB init
             Database.init();
+
+            // DAO init
             UserDao userDao = new UserDaoImpl();
+
+            // Services init
             UserService userService = new UserService(userDao);
-            BankingBot bot = new BankingBot(botToken, userService, userDao);
+
+            // Bot init
+            BankingBot bot = new BankingBot(botToken);
+            CommandContext ctx = new CommandContext(bot, userService);
+            CommandDispatcher dispatcher = new CommandDispatcher(/*adminIdFromConfig*/ 123456789L);
+
+
+            //Register cmds
+            dispatcher.register(new StartCommand());
+
+            //Inject in bot
+            bot.setDispatcher(dispatcher);
+            bot.setContext(ctx);
+
+            // Register bot
             botsApi.registerBot(botToken, bot);
             System.out.println("Banking bot started");
             // Ensure this prcess wait forever
