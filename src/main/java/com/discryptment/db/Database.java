@@ -1,6 +1,10 @@
 package com.discryptment.db;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,13 +15,26 @@ import java.util.stream.Collectors;
 public class Database {
     private static final String DB_URL = "jdbc:duckdb:bankingbot.duckdb"; // persistent file
 
+    public static void init() throws Exception{
+        findFile();
+        boolean fileExists = Files.exists(Paths.get("bankingbot.duckdb"));
+        try (Connection conn = getConnection()){
+            if(!fileExists){
+                System.out.println("Created DB");
+            } else {
+                System.out.println("Using existing DB");
+            }
+        }
+    }
     public static Connection getConnection() throws Exception {
         return DriverManager.getConnection(DB_URL);
     }
-    public static void initSchema(){
+
+    public static void schema() {
+
 
         try (Connection conn = getConnection();
-        Statement stmt = conn.createStatement()){
+             Statement stmt = conn.createStatement()) {
             // Load schema.sql
             String sql = new BufferedReader(
                     new InputStreamReader(
@@ -25,13 +42,19 @@ public class Database {
                     )
             ).lines().collect(Collectors.joining("\n"));
             // Split on semicolon and execute
-            for(String command: sql.split(";")) {
-                if(command.trim().isEmpty()) continue;
+            for (String command : sql.split(";")) {
+                if (command.trim().isEmpty()) continue;
                 stmt.execute(command.trim());
             }
             System.out.println("Schema initialized");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    public static void findFile(){
+        File dbFile = new File("bankingbot.duckdb");
+        if (!(dbFile.isFile())) {
+            Database.schema();
         }
     }
 }
