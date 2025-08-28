@@ -27,12 +27,29 @@ public class UserService {
 
         if (existing == null) {
             try(Connection conn = Database.getConnection()){
-                userDao.addUser(conn, user);
+                userDao.createUser(conn, user);
                 System.out.println("A new user will be created " + user.getTelegramId());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+    public User getProfile(User user){
+        User profile;
+        try(Connection conn = Database.getConnection()){
+            profile = userDao.findByTelegramId(conn, user.getTelegramId());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+            return profile;
+        }
+    public boolean addGold(int userId, int gold) throws SQLException {
+        try(Connection conn = Database.getConnection()){
+            return userDao.updateGoldBalance(conn, userId, gold);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
 
 //    public User getUserByTelegramId(long tgId) {

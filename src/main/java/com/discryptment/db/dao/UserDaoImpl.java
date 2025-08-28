@@ -21,21 +21,6 @@ public class UserDaoImpl implements UserDao {
         u.setAuthorized(rs.getBoolean("authorized"));
         return u;
     }
-@Override
-public void addUser(Connection conn, User user) {
-    String sql = "INSERT INTO users (telegram_id, username, gold_balance, real_usd_balance, expected_usd_total, authorized) VALUES (?, ?, ?, ?, ?, ?)";
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setLong(1, user.getTelegramId());
-        stmt.setString(2, user.getUsername());
-        stmt.setDouble(3, user.getGoldBalance());
-        stmt.setDouble(4, user.getRealUsdBalance());
-        stmt.setDouble(5, user.getExpectedUsdTotal());
-        stmt.setBoolean(6, user.isAuthorized());
-        stmt.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
     @Override
     public Integer findIdByTelegramId(Connection conn, long telegramId) throws SQLException {
         String sql = "SELECT id FROM users WHERE telegram_id = ?";
@@ -108,6 +93,42 @@ public void addUser(Connection conn, User user) {
             return rows == 1;
         }
     }
+    @Override
+    public boolean updateGoldBalance(Connection conn, int userId, int deltaGold) throws SQLException {
+        String sql = "UPDATE users SET gold_balance = gold_balance + ? " +
+                "WHERE id = ? AND gold_balance + ? >= 0";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, deltaGold);
+            ps.setInt(2, userId);
+            ps.setInt(3, deltaGold);
+            int rows = ps.executeUpdate();
+            return rows == 1;
+        }
+    }
+    @Override
+    public boolean updateRealUsdBalance(Connection conn, int userId, double deltaRealUsd) throws SQLException {
+        String sql = "UPDATE users SET real_usd_balance = real_usd_balance + ? " +
+                "WHERE id = ? AND real_usd_balance + ? >= 0";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, deltaRealUsd);
+            ps.setInt(2, userId);
+            ps.setDouble(3, deltaRealUsd);
+            int rows = ps.executeUpdate();
+            return rows == 1;
+        }
+    }
+    @Override
+    public boolean updateExpectedUsdBalance(Connection conn, int userId, double deltaExpectedUsd) throws SQLException {
+        String sql = "UPDATE users SET expected_usd_total = expected_usd_total + ? " +
+                "WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, deltaExpectedUsd);
+            ps.setInt(2, userId);
+            int rows = ps.executeUpdate();
+            return rows == 1;
+        }
+    }
+
 
     @Override
     public void setAuthorized(Connection conn, int userId, boolean authorized) throws SQLException {

@@ -3,6 +3,8 @@ package com.discryptment;
 import com.discryptment.bot.BankingBot;
 import com.discryptment.commands.CommandContext;
 import com.discryptment.commands.CommandDispatcher;
+import com.discryptment.commands.user.profile.AddGoldCommand;
+import com.discryptment.commands.user.profile.ProfileCommand;
 import com.discryptment.commands.user.StartCommand;
 import com.discryptment.db.Database;
 import com.discryptment.db.dao.UserDao;
@@ -10,9 +12,6 @@ import com.discryptment.db.dao.UserDaoImpl;
 import com.discryptment.service.UserService;
 import com.discryptment.util.EnvReader;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
-
-import java.io.File;
-import java.sql.Connection;
 
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -44,6 +43,8 @@ public class Main {
 
             //Register cmds
             dispatcher.register(new StartCommand());
+            dispatcher.register(new ProfileCommand());
+            dispatcher.register(new AddGoldCommand());
 
             //Inject in bot
             bot.setDispatcher(dispatcher);

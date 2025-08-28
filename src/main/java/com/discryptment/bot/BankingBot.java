@@ -2,9 +2,6 @@ package com.discryptment.bot;
 
 import com.discryptment.commands.CommandContext;
 import com.discryptment.commands.CommandDispatcher;
-import com.discryptment.db.dao.UserDao;
-import com.discryptment.model.User;
-import com.discryptment.service.UserService;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
