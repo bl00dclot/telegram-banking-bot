@@ -15,9 +15,9 @@ public interface UserDao {
 
     boolean updateGoldBalance(Connection conn, int userId, int deltaGold) throws SQLException;
 
-    boolean updateRealUsdBalance(Connection conn, int userId, double deltaRealUsd) throws SQLException;
+    boolean updateRealUsdBalance(Connection conn, int userId, int deltaRealUsd) throws SQLException;
 
-    boolean updateExpectedUsdBalance(Connection conn, int userId, double deltaExpectedUsd) throws SQLException;
+    boolean updateExpectedUsdBalance(Connection conn, int userId, int deltaExpectedUsd) throws SQLException;
 
     void setAuthorized(Connection conn, int userId, boolean authorized) throws SQLException;
     List<User> listAll(Connection conn) throws SQLException;

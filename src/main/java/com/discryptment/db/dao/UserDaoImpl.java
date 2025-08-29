@@ -106,23 +106,23 @@ public class UserDaoImpl implements UserDao {
         }
     }
     @Override
-    public boolean updateRealUsdBalance(Connection conn, int userId, double deltaRealUsd) throws SQLException {
+    public boolean updateRealUsdBalance(Connection conn, int userId, int deltaRealUsd) throws SQLException {
         String sql = "UPDATE users SET real_usd_balance = real_usd_balance + ? " +
                 "WHERE id = ? AND real_usd_balance + ? >= 0";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, deltaRealUsd);
+            ps.setInt(1, deltaRealUsd);
             ps.setInt(2, userId);
-            ps.setDouble(3, deltaRealUsd);
+            ps.setInt(3, deltaRealUsd);
             int rows = ps.executeUpdate();
             return rows == 1;
         }
     }
     @Override
-    public boolean updateExpectedUsdBalance(Connection conn, int userId, double deltaExpectedUsd) throws SQLException {
+    public boolean updateExpectedUsdBalance(Connection conn, int userId, int deltaExpectedUsd) throws SQLException {
         String sql = "UPDATE users SET expected_usd_total = expected_usd_total + ? " +
                 "WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, deltaExpectedUsd);
+            ps.setInt(1, deltaExpectedUsd);
             ps.setInt(2, userId);
             int rows = ps.executeUpdate();
             return rows == 1;

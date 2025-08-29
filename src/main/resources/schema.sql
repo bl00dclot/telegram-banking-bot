@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS vault (
     id INTEGER,
     usd DOUBLE,
-    gold DOUBLE
+    gold INTEGER
 );
 CREATE TABLE IF NOT EXISTS config (
     id INTEGER,
@@ -14,8 +14,10 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR,
     gold_balance INTEGER,
     real_usd_balance DOUBLE,
+    gold_price_usd INT,
     expected_usd_total DOUBLE,
-    authorized BOOLEAN
+    authorized BOOLEAN,
+    date_by TIMESTAMP_S
 );
 CREATE TABLE IF NOT EXISTS invoices (
     id INTEGER,

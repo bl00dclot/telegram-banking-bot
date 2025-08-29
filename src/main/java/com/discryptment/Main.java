@@ -5,7 +5,7 @@ import com.discryptment.commands.CommandContext;
 import com.discryptment.commands.CommandDispatcher;
 import com.discryptment.commands.user.profile.AddGoldCommand;
 import com.discryptment.commands.user.profile.ProfileCommand;
-import com.discryptment.commands.user.StartCommand;
+import com.discryptment.commands.user.auth.StartCommand;
 import com.discryptment.db.Database;
 import com.discryptment.db.dao.UserDao;
 import com.discryptment.db.dao.UserDaoImpl;
@@ -45,6 +45,7 @@ public class Main {
             dispatcher.register(new StartCommand());
             dispatcher.register(new ProfileCommand());
             dispatcher.register(new AddGoldCommand());
+
 
             //Inject in bot
             bot.setDispatcher(dispatcher);

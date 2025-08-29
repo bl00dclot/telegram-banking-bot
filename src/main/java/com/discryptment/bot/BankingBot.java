@@ -29,8 +29,13 @@ public class BankingBot implements LongPollingSingleThreadUpdateConsumer {
         }
     }
     public void sendText(long chatId, String text) {
+        SendMessage message = SendMessage // Create a message object
+                    .builder()
+                    .chatId(chatId)
+                    .text(text)
+                    .build();
         SendMessage out = new SendMessage(String.valueOf(chatId), text);
-        try { telegramClient.execute(out); } catch (TelegramApiException e) { e.printStackTrace(); }
+        try { telegramClient.execute(message); } catch (TelegramApiException e) { e.printStackTrace(); }
     }
 //    @Override
 //    public void consume(Update update) {
