@@ -1,7 +1,7 @@
 package com.discryptment.db.dao;
 
 import com.discryptment.model.Config;
-import okhttp3.Connection;
+import java.sql.Connection;
 
 import java.sql.SQLException;
 import java.util.Optional;

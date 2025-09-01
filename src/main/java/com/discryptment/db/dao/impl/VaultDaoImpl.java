@@ -1,12 +1,13 @@
-package com.discryptment.db.dao;
+package com.discryptment.db.dao.impl;
 
+import com.discryptment.db.dao.VaultDao;
 import com.discryptment.model.Vault;
 import java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class VaultDaoImpl implements VaultDao{
+public class VaultDaoImpl implements VaultDao {
     @Override
     public Vault getVault(Connection conn) throws SQLException {
         return null;

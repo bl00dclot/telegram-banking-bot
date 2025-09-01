@@ -1,5 +1,6 @@
-package com.discryptment.db.dao;
+package com.discryptment.db.dao.impl;
 
+import com.discryptment.db.dao.UserDao;
 import com.discryptment.model.User;
 
 import java.sql.*;
@@ -31,7 +32,6 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
     }
-
     @Override
     public User findById(Connection conn, int id) throws SQLException {
         String sql = "SELECT * FROM users WHERE id = ?";
@@ -42,7 +42,6 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
     }
-
     @Override
     public User findByTelegramId(Connection conn, long telegramId) throws SQLException {
         String sql = "SELECT * FROM users WHERE telegram_id = ?";
@@ -53,7 +52,6 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
     }
-
     @Override
     public int createUser(Connection conn, User user) throws SQLException {
         // generate id manually (SELECT COALESCE(MAX(id),0)+1)
@@ -78,7 +76,6 @@ public class UserDaoImpl implements UserDao {
         }
         return nextId;
     }
-
     @Override
     public boolean updateBalances(Connection conn, int userId, double deltaGold, double deltaRealUsd, double deltaExpectedUsd) throws SQLException {
         String sql = "UPDATE users SET gold_balance = gold_balance + ?, real_usd_balance = real_usd_balance + ?, expected_usd_total = expected_usd_total + ? WHERE id = ? AND gold_balance + ? >= 0 AND real_usd_balance + ? >= 0";
@@ -128,8 +125,6 @@ public class UserDaoImpl implements UserDao {
             return rows == 1;
         }
     }
-
-
     @Override
     public void setAuthorized(Connection conn, int userId, boolean authorized) throws SQLException {
         String sql = "UPDATE users SET authorized = ? WHERE id = ?";
@@ -139,7 +134,6 @@ public class UserDaoImpl implements UserDao {
             ps.executeUpdate();
         }
     }
-
     @Override
     public List<User> listAll(Connection conn) throws SQLException {
         String sql = "SELECT * FROM users";

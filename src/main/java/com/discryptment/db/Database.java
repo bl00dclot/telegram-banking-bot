@@ -1,5 +1,8 @@
 package com.discryptment.db;
 
+import com.discryptment.service.AuthService;
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -14,6 +17,7 @@ import java.util.stream.Collectors;
 
 public class Database {
     private static final String DB_URL = "jdbc:duckdb:bankingbot.duckdb"; // persistent file
+    private static final AuthService authService = new AuthService();
 
     public static void init() throws Exception{
         findFile();
@@ -51,10 +55,11 @@ public class Database {
             e.printStackTrace();
         }
     }
-    public static void findFile(){
+    public static void findFile() throws SQLException {
         File dbFile = new File("bankingbot.duckdb");
         if (!(dbFile.isFile())) {
             Database.schema();
+            authService.setPassword("qwe123");
         }
     }
 }

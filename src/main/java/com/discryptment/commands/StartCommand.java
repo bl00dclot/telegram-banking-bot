@@ -1,8 +1,5 @@
-package com.discryptment.commands.user.auth;
+package com.discryptment.commands;
 
-import com.discryptment.commands.BotCommand;
-import com.discryptment.commands.CommandContext;
-import com.discryptment.model.User;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 public class StartCommand implements BotCommand {

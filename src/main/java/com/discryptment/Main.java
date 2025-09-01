@@ -1,14 +1,19 @@
 package com.discryptment;
 
 import com.discryptment.bot.BankingBot;
+import com.discryptment.bot.conversation.ConversationManager;
+import com.discryptment.bot.conversation.ConversationRouter;
+import com.discryptment.commands.CancelCommand;
 import com.discryptment.commands.CommandContext;
 import com.discryptment.commands.CommandDispatcher;
+import com.discryptment.commands.user.auth.LoginCommand;
 import com.discryptment.commands.user.profile.AddGoldCommand;
 import com.discryptment.commands.user.profile.ProfileCommand;
-import com.discryptment.commands.user.auth.StartCommand;
+import com.discryptment.commands.StartCommand;
 import com.discryptment.db.Database;
 import com.discryptment.db.dao.UserDao;
-import com.discryptment.db.dao.UserDaoImpl;
+import com.discryptment.db.dao.impl.UserDaoImpl;
+import com.discryptment.service.AuthService;
 import com.discryptment.service.UserService;
 import com.discryptment.util.EnvReader;
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
@@ -34,15 +39,23 @@ public class Main {
 
             // Services init
             UserService userService = new UserService(userDao);
+            AuthService authService = new AuthService();
+
+            //Conversation init
+            ConversationManager convMgr = new ConversationManager(30);
+            ConversationRouter convRouter = new ConversationRouter(authService, userService);
+
 
             // Bot init
             BankingBot bot = new BankingBot(botToken);
-            CommandContext ctx = new CommandContext(bot, userService);
-            CommandDispatcher dispatcher = new CommandDispatcher(/*adminIdFromConfig*/ 123456789L);
+            CommandContext ctx = new CommandContext(bot, convMgr, userService, authService);
+            CommandDispatcher dispatcher = new CommandDispatcher(123, convMgr, convRouter);
 
 
             //Register cmds
             dispatcher.register(new StartCommand());
+            dispatcher.register(new CancelCommand());
+            dispatcher.register(new LoginCommand(convMgr, 3));
             dispatcher.register(new ProfileCommand());
             dispatcher.register(new AddGoldCommand());
 

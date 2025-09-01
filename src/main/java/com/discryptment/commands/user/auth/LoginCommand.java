@@ -51,7 +51,7 @@ public class LoginCommand implements BotCommand {
         // service will open/close DB connection internally
 //        ctx.userService.registerUser(user);
         StringBuilder sb = new StringBuilder();
-        sb.append("Enter password (you have ").append(maxAttempts).append(" attempts");
+        sb.append("Enter password (you have ").append(maxAttempts).append(" attempts)");
 
         ctx.bot.sendText(chatId, sb.toString());
         // optionally trigger password prompt flow here
