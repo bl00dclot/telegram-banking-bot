@@ -52,6 +52,26 @@ public class CommandDispatcher {
         // 1) If user is currently in a conversation flow, handle that first
         Conversation conv = convMgr.getConversation(tgId);
         if (conv != null) {
+            if (!text.isEmpty() && text.startsWith("/")) {
+                String[] parts = text.split("\\s+");
+                String token = parts[0].toLowerCase();
+                BotCommand cmd = commands.get(token);
+                if (cmd != null) {
+                    // run the command normally (respect adminOnly)
+                    if (cmd.adminOnly() && msg.getFrom().getId() != adminTelegramId) {
+                        ctx.bot.sendText(msg.getChatId(), "⛔ This command is admin-only.");
+                        return true;
+                    }
+                    String[] args = parts.length > 1 ? Arrays.copyOfRange(parts, 1, parts.length) : new String[0];
+                    try {
+                        cmd.execute(msg, args, ctx);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        ctx.bot.sendText(msg.getChatId(), "Internal error while executing command.");
+                    }
+                    return true;
+                }
+            }
             try {
                 // convRouter will decide what to do with this message (password attempt, invoice step, etc.)
                 // Signature assumed: handleMessage(Message message, Conversation conv, CommandContext ctx, ConversationManager convMgr)
