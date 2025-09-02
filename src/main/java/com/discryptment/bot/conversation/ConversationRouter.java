@@ -43,7 +43,7 @@ public class ConversationRouter {
             user.setExpectedUsdTotal(0.0);
             user.setRealUsdBalance(0.0);
             user.setAuthorized(false);
-            System.out.println(user.getUsername());
+            System.out.println(user.getUsername() + " is logged in");
 
             userService.registerUser(user);
             authService.markUserAuthorizedByTelegramId(tgId, true);

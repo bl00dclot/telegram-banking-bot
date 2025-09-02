@@ -10,6 +10,28 @@ public class ConfigDaoImpl implements ConfigDao {
     public ConfigDaoImpl() {
     }
 
+    @Override
+    public boolean isRegistrationOpen(Connection conn) throws SQLException {
+        String sql = "SELECT registration_open FROM config WHERE id = 1 LIMIT 1";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getBoolean("registration_open");
+            }
+            // default to false if config row missing
+            return false;
+        }
+    }
+
+    public boolean setRegistrationStatus(Connection conn, boolean status) throws SQLException {
+        String sql = "UPDATE config SET registration_open = ? WHERE id = 1";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, status);
+            int rows = ps.executeUpdate();
+            return rows == 1;
+        }
+
+    }
 
     @Override
     public Optional<Config> getConfig(Connection conn) throws SQLException {

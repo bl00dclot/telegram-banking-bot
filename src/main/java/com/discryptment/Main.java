@@ -11,7 +11,9 @@ import com.discryptment.commands.user.profile.AddGoldCommand;
 import com.discryptment.commands.user.profile.ProfileCommand;
 import com.discryptment.commands.StartCommand;
 import com.discryptment.db.Database;
+import com.discryptment.db.dao.ConfigDao;
 import com.discryptment.db.dao.UserDao;
+import com.discryptment.db.dao.impl.ConfigDaoImpl;
 import com.discryptment.db.dao.impl.UserDaoImpl;
 import com.discryptment.service.AuthService;
 import com.discryptment.service.UserService;
@@ -36,9 +38,10 @@ public class Main {
 
             // DAO init
             UserDao userDao = new UserDaoImpl();
+            ConfigDao configDao = new ConfigDaoImpl();
 
             // Services init
-            UserService userService = new UserService(userDao);
+            UserService userService = new UserService(userDao, configDao);
             AuthService authService = new AuthService();
 
             //Conversation init

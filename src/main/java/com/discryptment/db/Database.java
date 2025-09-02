@@ -1,7 +1,6 @@
 package com.discryptment.db;
 
 import com.discryptment.service.AuthService;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,17 +18,18 @@ public class Database {
     private static final String DB_URL = "jdbc:duckdb:bankingbot.duckdb"; // persistent file
     private static final AuthService authService = new AuthService();
 
-    public static void init() throws Exception{
+    public static void init() throws Exception {
         findFile();
         boolean fileExists = Files.exists(Paths.get("bankingbot.duckdb"));
-        try (Connection conn = getConnection()){
-            if(!fileExists){
+        try (Connection conn = getConnection()) {
+            if (!fileExists) {
                 System.out.println("Created DB");
             } else {
                 System.out.println("Using existing DB");
             }
         }
     }
+
     public static Connection getConnection() throws Exception {
         return DriverManager.getConnection(DB_URL);
     }
@@ -55,11 +55,14 @@ public class Database {
             e.printStackTrace();
         }
     }
+
     public static void findFile() throws SQLException {
         File dbFile = new File("bankingbot.duckdb");
         if (!(dbFile.isFile())) {
             Database.schema();
             authService.setPassword("qwe123");
+            authService.setRegistration(false);
+
         }
     }
 }

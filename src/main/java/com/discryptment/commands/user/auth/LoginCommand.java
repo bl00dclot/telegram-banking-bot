@@ -37,6 +37,7 @@ public class LoginCommand implements BotCommand {
         conv.setData(new HashMap<>());
 
         convMgr.startConversation(telegramId, conv);
+        System.out.println(username + " is logging");
 
         StringBuilder sb = new StringBuilder();
         sb.append("Enter password (you have ").append(maxAttempts).append(" attempts)");

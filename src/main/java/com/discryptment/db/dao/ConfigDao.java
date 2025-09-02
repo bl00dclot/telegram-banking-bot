@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface ConfigDao {
     Optional<Config> getConfig(Connection conn) throws SQLException;
     void upsertConfig(Connection conn, Config cfg) throws SQLException;
+    boolean isRegistrationOpen(Connection conn) throws SQLException;
+    boolean setRegistrationStatus(Connection conn, boolean status) throws SQLException;
 }

@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS vault (
 CREATE TABLE IF NOT EXISTS config (
     id INTEGER,
     auth_password VARCHAR,
+    registration_open BOOLEAN,
     admin_id BIGINT
 );
 CREATE TABLE IF NOT EXISTS users (

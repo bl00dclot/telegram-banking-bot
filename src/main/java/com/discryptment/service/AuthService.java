@@ -27,6 +27,14 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
+    public boolean setRegistration(boolean status) throws SQLException{
+        try(Connection conn = Database.getConnection()){
+            boolean result = configDao.setRegistrationStatus(conn, status);
+            return result;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void setPassword(String newPassword) throws SQLException{
         String hash = BCrypt.hashpw(newPassword, BCrypt.gensalt(12));
         try(Connection conn = Database.getConnection()){
