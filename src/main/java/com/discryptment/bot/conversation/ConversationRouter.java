@@ -1,6 +1,7 @@
 package com.discryptment.bot.conversation;
 
 import com.discryptment.commands.CommandContext;
+import com.discryptment.model.User;
 import com.discryptment.service.AuthService;
 import com.discryptment.service.UserService;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -10,26 +11,41 @@ import java.sql.SQLException;
 public class ConversationRouter {
     private final AuthService authService;
     private final UserService userService;
-    public ConversationRouter(AuthService authService, UserService userService){
+
+    public ConversationRouter(AuthService authService, UserService userService) {
         this.authService = authService;
         this.userService = userService;
     }
 
     public void handleMessage(Message message, Conversation conv, CommandContext ctx, ConversationManager convMgr) throws Exception {
-        if(conv.getState() == ConversationState.AWAITING_PASSWORD){
+        if (conv.getState() == ConversationState.AWAITING_PASSWORD) {
             handlePassword(message, conv, ctx, convMgr);
             return;
         }
     }
+
     public void handlePassword(Message message, Conversation conv, CommandContext ctx, ConversationManager convMgr) throws SQLException {
         long tgId = conv.getTelegramId();
         long chatId = message.getChatId();
         String attempt = message.getText().trim();
+        String username = message.getFrom().getUserName();
 
         boolean ok = ctx.authService.verifyPassword(attempt);
 
         if (ok) {
             // mark user as authorized in DB
+
+            //Build User POJO
+            User user = new User();
+            user.setTelegramId(tgId);
+            user.setUsername(username);
+            user.setGoldBalance(0.0);
+            user.setExpectedUsdTotal(0.0);
+            user.setRealUsdBalance(0.0);
+            user.setAuthorized(false);
+            System.out.println(user.getUsername());
+
+            userService.registerUser(user);
             authService.markUserAuthorizedByTelegramId(tgId, true);
             convMgr.endConversation(tgId);
             ctx.bot.sendText(chatId, "✅ Authorized. You can use protected commands.");

@@ -24,14 +24,14 @@ public class ProfileCommand implements BotCommand {
         User user = new User();
         user.setTelegramId(telegramId);
         user.setUsername(username);
-        System.out.println(user.getUsername());
+        System.out.println(user.getUsername() + "'s profile is sent to chat");
 
 
         // service will open/close DB connection internally
         User profile = ctx.userService.getProfile(user);
 
         if(profile == null){
-            ctx.bot.sendText(chatId, "No profile found. Use /start to register.");
+            ctx.bot.sendText(chatId, "No profile found. Use /start to initiate.");
             return;
         }
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);

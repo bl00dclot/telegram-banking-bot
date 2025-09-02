@@ -27,16 +27,7 @@ public class LoginCommand implements BotCommand {
         long telegramId = message.getFrom().getId();
         String username = message.getFrom().getUserName();
         long chatId = message.getChatId();
-//
-//        //Build User POJO
-//        User user = new User();
-//        user.setTelegramId(telegramId);
-//        user.setUsername(username);
-//        user.setGoldBalance(0.0);
-//        user.setExpectedUsdTotal(0.0);
-//        user.setRealUsdBalance(0.0);
-//        user.setAuthorized(true);
-//        System.out.println(user.getUsername());
+
 
         Conversation conv = new Conversation();
         conv.setTelegramId(telegramId);
@@ -47,13 +38,9 @@ public class LoginCommand implements BotCommand {
 
         convMgr.startConversation(telegramId, conv);
 
-
-        // service will open/close DB connection internally
-//        ctx.userService.registerUser(user);
         StringBuilder sb = new StringBuilder();
         sb.append("Enter password (you have ").append(maxAttempts).append(" attempts)");
 
         ctx.bot.sendText(chatId, sb.toString());
-        // optionally trigger password prompt flow here
     }
 }

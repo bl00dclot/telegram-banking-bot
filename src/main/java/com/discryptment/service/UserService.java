@@ -19,7 +19,7 @@ public class UserService {
         try(Connection conn = Database.getConnection()){
             existing = userDao.findByTelegramId(conn, user.getTelegramId());
             if(existing != null){
-                System.out.println("In DB there should be " + existing);
+                System.out.println("In DB there should be a user - " + existing.getUsername());
             }
              } catch (Exception e) {
             throw new RuntimeException(e);
@@ -28,7 +28,7 @@ public class UserService {
         if (existing == null) {
             try(Connection conn = Database.getConnection()){
                 userDao.createUser(conn, user);
-                System.out.println("A new user will be created " + user.getTelegramId());
+                System.out.println("A new user '" + user.getTelegramId() + "' will be created ");
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
