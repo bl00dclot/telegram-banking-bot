@@ -15,6 +15,7 @@ public class EnvReader {
     public static void init(String directory) {
         init(directory, ".env");
     }
+
     /**
      * Initialize the environment utility with custom directory and filename
      * @param directory The directory containing the env file

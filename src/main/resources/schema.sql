@@ -17,8 +17,10 @@ CREATE TABLE IF NOT EXISTS users (
     real_usd_balance DOUBLE,
     gold_price_usd INT,
     expected_usd_total DOUBLE,
-    authorized BOOLEAN,
-    date_by TIMESTAMP_S
+    authorized BOOLEAN DEFAULT FALSE,
+    started BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS invoices (
     id INTEGER,

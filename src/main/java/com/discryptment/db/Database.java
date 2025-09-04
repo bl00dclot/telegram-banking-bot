@@ -1,6 +1,7 @@
 package com.discryptment.db;
 
 import com.discryptment.service.AuthService;
+import com.discryptment.util.EnvReader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -57,10 +58,12 @@ public class Database {
     }
 
     public static void findFile() throws SQLException {
+        EnvReader.init("src/main/resources", ".env");
+        String pass = EnvReader.get("AUTH_PASS");
         File dbFile = new File("bankingbot.duckdb");
         if (!(dbFile.isFile())) {
             Database.schema();
-            authService.setPassword("qwe123");
+            authService.setPassword(pass);
             authService.setRegistration(false);
 
         }
