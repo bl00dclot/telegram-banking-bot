@@ -31,8 +31,5 @@ public class User {
 
     public boolean isAuthorized() { return authorized; }
     public void setAuthorized(boolean authorized) { this.authorized = authorized; }
-
-    public boolean isStarted() { return started; }
-    public void setStarted(boolean started) { this.started = started; }
 }
 

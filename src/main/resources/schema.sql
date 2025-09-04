@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS users (
     gold_price_usd INT,
     expected_usd_total DOUBLE,
     authorized BOOLEAN DEFAULT FALSE,
-    started BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

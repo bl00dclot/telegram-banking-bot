@@ -1,5 +1,6 @@
 package com.discryptment.commands;
 
+import com.discryptment.bot.SessionManager;
 import com.discryptment.bot.conversation.Conversation;
 import com.discryptment.bot.conversation.ConversationManager;
 import com.discryptment.bot.conversation.ConversationRouter;
@@ -23,17 +24,21 @@ public class CommandDispatcher {
     private final long adminTelegramId; // from config
     private final ConversationManager convMgr;
     private final ConversationRouter convRouter;
+    private final SessionManager sessionManager;
 
-    public CommandDispatcher(long adminTelegramId, ConversationManager convMgr, ConversationRouter convRouter) throws Exception {
+    public CommandDispatcher(long adminTelegramId,
+                             ConversationManager convMgr,
+                             ConversationRouter convRouter,
+                             SessionManager sessionManager) throws Exception {
         this.adminTelegramId = adminTelegramId;
         this.convRouter = convRouter;
         this.convMgr = convMgr;
+        this.sessionManager = sessionManager;
     }
 
     /**
      * Register a command instance (token from cmd.name() will be normalized to lower-case)
      */
-
     public void register(BotCommand cmd) {
         commands.put(cmd.name().toLowerCase(), cmd);
     }
@@ -49,15 +54,23 @@ public class CommandDispatcher {
         String text = msg.getText().trim();
         long tgId = msg.getFrom().getId();
 
-        // 1) If user is currently in a conversation flow, handle that first
+        // Quick exit for empty text
+        if (text.isEmpty()) return false;
+
+        // Check if user is in an active conversation
         Conversation conv = convMgr.getConversation(tgId);
         if (conv != null) {
-            if (!text.isEmpty() && text.startsWith("/")) {
+            // If the message is a slash command, try to run it (respect adminOnly)
+            if (text.startsWith("/")) {
                 String[] parts = text.split("\\s+");
                 String token = parts[0].toLowerCase();
                 BotCommand cmd = commands.get(token);
                 if (cmd != null) {
-                    // run the command normally (respect adminOnly)
+                    // /start requirement: only allow non-/start commands after session started
+                    if (!token.equals("/start") && !sessionManager.hasStarted(tgId)) {
+                        ctx.bot.sendText(msg.getChatId(), "👉 Please send /start first to begin.");
+                        return true;
+                    }
                     if (cmd.adminOnly() && msg.getFrom().getId() != adminTelegramId) {
                         ctx.bot.sendText(msg.getChatId(), "⛔ This command is admin-only.");
                         return true;
@@ -65,13 +78,19 @@ public class CommandDispatcher {
                     String[] args = parts.length > 1 ? Arrays.copyOfRange(parts, 1, parts.length) : new String[0];
                     try {
                         cmd.execute(msg, args, ctx);
+                        if (token.equals("/start")) {
+                            sessionManager.markStarted(tgId);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         ctx.bot.sendText(msg.getChatId(), "Internal error while executing command.");
                     }
                     return true;
                 }
+                // If it's a slash command but not a registered command, fall through to conversation handling
             }
+
+            // Not a recognized command (or not starting with /) — treat as conversation input
             try {
                 // convRouter will decide what to do with this message (password attempt, invoice step, etc.)
                 // Signature assumed: handleMessage(Message message, Conversation conv, CommandContext ctx, ConversationManager convMgr)
@@ -80,20 +99,25 @@ public class CommandDispatcher {
                 e.printStackTrace();
                 // Inform the user of a generic error but do not leak internals
                 ctx.bot.sendText(msg.getChatId(), "Internal error while processing your reply. Try /cancel and start again.");
-                // End conversation to avoid stuck states if appropriate (optional)
+                // Optionally end conversation to avoid stuck states
                 // convMgr.endConversation(tgId);
-
             }
-            return true; // we've handled the message as part of a conversation
+            return true; // handled as part of a conversation
         }
 
-        // 2) Not in a conversation — only treat text starting with a slash as a command
-        if (text.isEmpty() || !text.startsWith("/")) return false;
+        // Not in a conversation — only treat text starting with a slash as a command
+        if (!text.startsWith("/")) return false;
 
         String[] parts = text.split("\\s+");
         String token = parts[0].toLowerCase();
         BotCommand cmd = commands.get(token);
         if (cmd == null) return false;
+
+        // session started check
+        if (!token.equals("/start") && !sessionManager.hasStarted(tgId)) {
+            ctx.bot.sendText(msg.getChatId(), "👉 Please send /start first to begin.");
+            return true;
+        }
 
         // admin check
         if (cmd.adminOnly() && msg.getFrom().getId() != adminTelegramId) {
@@ -105,6 +129,10 @@ public class CommandDispatcher {
 
         try {
             cmd.execute(msg, args, ctx);
+            // mark started if it's /start
+            if (token.equals("/start")) {
+                sessionManager.markStarted(tgId);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             ctx.bot.sendText(msg.getChatId(), "Internal error while executing command.");

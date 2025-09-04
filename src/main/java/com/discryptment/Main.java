@@ -1,6 +1,7 @@
 package com.discryptment;
 
 import com.discryptment.bot.BankingBot;
+import com.discryptment.bot.SessionManager;
 import com.discryptment.bot.conversation.ConversationManager;
 import com.discryptment.bot.conversation.ConversationRouter;
 import com.discryptment.commands.CancelCommand;
@@ -48,11 +49,13 @@ public class Main {
             ConversationManager convMgr = new ConversationManager(30);
             ConversationRouter convRouter = new ConversationRouter(authService, userService);
 
+            //Session init
+            SessionManager sessionManager = new SessionManager();
 
             // Bot init
             BankingBot bot = new BankingBot(botToken);
             CommandContext ctx = new CommandContext(bot, convMgr, userService, authService);
-            CommandDispatcher dispatcher = new CommandDispatcher(123, convMgr, convRouter);
+            CommandDispatcher dispatcher = new CommandDispatcher(123, convMgr, convRouter, sessionManager);
 
 
             //Register cmds
