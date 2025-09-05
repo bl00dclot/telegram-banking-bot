@@ -98,7 +98,7 @@ public class CommandDispatcher {
             } catch (Exception e) {
                 e.printStackTrace();
                 // Inform the user of a generic error but do not leak internals
-                ctx.bot.sendText(msg.getChatId(), "Internal error while processing your reply. Try /cancel and start again.");
+                ctx.bot.sendText(msg.getChatId(), e.getMessage() + "\n\nInternal error while processing your reply. Try /cancel and start again.");
                 // Optionally end conversation to avoid stuck states
                 // convMgr.endConversation(tgId);
             }

@@ -31,7 +31,7 @@ public class ProfileCommand implements BotCommand {
         User profile = ctx.userService.getProfile(user);
 
         if(profile == null){
-            ctx.bot.sendText(chatId, "No profile found. Use /start to initiate.");
+            ctx.bot.sendText(chatId, "No profile found. Use /login");
             return;
         }
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);

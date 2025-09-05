@@ -9,6 +9,12 @@ CREATE TABLE IF NOT EXISTS config (
     registration_open BOOLEAN,
     admin_id BIGINT
 );
+CREATE TABLE IF NOT EXISTS admins (
+    telegram_id BIGINT PRIMARY KEY,
+    label VARCHAR,                       -- optional human label
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by BIGINT                    -- who added this admin (nullable)
+);
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER,
     telegram_id BIGINT,

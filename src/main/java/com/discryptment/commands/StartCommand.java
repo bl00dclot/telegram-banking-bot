@@ -30,7 +30,7 @@ public class StartCommand implements BotCommand {
         sb.append("Welcome to the Banking Bot").append("\n\n");
         sb.append("Privacy matters").append("\n\n");
         sb.append("To get started please use the login command").append("\n");
-        sb.append("         /login         ");
+        sb.append("                  /login");
         ctx.bot.sendText(message.getChatId(), sb.toString());
         // optionally trigger password prompt flow here
     }

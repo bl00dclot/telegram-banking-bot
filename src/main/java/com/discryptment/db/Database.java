@@ -1,5 +1,6 @@
 package com.discryptment.db;
 
+import com.discryptment.service.AdminService;
 import com.discryptment.service.AuthService;
 import com.discryptment.util.EnvReader;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class Database {
     private static final String DB_URL = "jdbc:duckdb:bankingbot.duckdb"; // persistent file
     private static final AuthService authService = new AuthService();
+    private static final AdminService adminService = new AdminService();
 
     public static void init() throws Exception {
         findFile();
@@ -60,12 +62,13 @@ public class Database {
     public static void findFile() throws SQLException {
         EnvReader.init("src/main/resources", ".env");
         String pass = EnvReader.get("AUTH_PASS");
+        long initAdminId = Long.parseLong(EnvReader.get("INIT_ADMIN"));
         File dbFile = new File("bankingbot.duckdb");
         if (!(dbFile.isFile())) {
             Database.schema();
             authService.setPassword(pass);
-            authService.setRegistration(false);
-
+            authService.setRegistration(true);
+            adminService.initAdmin(initAdminId);
         }
     }
 }
