@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Dispatches incoming Telegram updates to either:
@@ -21,16 +22,17 @@ import java.util.Map;
  */
 public class CommandDispatcher {
     private final Map<String, BotCommand> commands = new HashMap<>();
-    private final long adminTelegramId; // from config
+    private final Set<Long> adminList; // from config
     private final ConversationManager convMgr;
     private final ConversationRouter convRouter;
     private final SessionManager sessionManager;
 
-    public CommandDispatcher(long adminTelegramId,
+    public CommandDispatcher(Set<Long> adminList,
                              ConversationManager convMgr,
                              ConversationRouter convRouter,
                              SessionManager sessionManager) throws Exception {
-        this.adminTelegramId = adminTelegramId;
+        this.adminList = adminList;
+        System.out.println(adminList);
         this.convRouter = convRouter;
         this.convMgr = convMgr;
         this.sessionManager = sessionManager;
@@ -71,7 +73,7 @@ public class CommandDispatcher {
                         ctx.bot.sendText(msg.getChatId(), "👉 Please send /start first to begin.");
                         return true;
                     }
-                    if (cmd.adminOnly() && msg.getFrom().getId() != adminTelegramId) {
+                    if (cmd.adminOnly() && !adminList.contains(msg.getFrom().getId())) {
                         ctx.bot.sendText(msg.getChatId(), "⛔ This command is admin-only.");
                         return true;
                     }
@@ -120,7 +122,7 @@ public class CommandDispatcher {
         }
 
         // admin check
-        if (cmd.adminOnly() && msg.getFrom().getId() != adminTelegramId) {
+        if (cmd.adminOnly() && !adminList.contains(msg.getFrom().getId())) {
             ctx.bot.sendText(msg.getChatId(), "⛔ This command is admin-only.");
             return true;
         }

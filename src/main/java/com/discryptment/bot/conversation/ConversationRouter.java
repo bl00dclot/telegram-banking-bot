@@ -2,6 +2,7 @@ package com.discryptment.bot.conversation;
 
 import com.discryptment.commands.CommandContext;
 import com.discryptment.model.User;
+import com.discryptment.service.AdminService;
 import com.discryptment.service.AuthService;
 import com.discryptment.service.UserService;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -11,15 +12,21 @@ import java.sql.SQLException;
 public class ConversationRouter {
     private final AuthService authService;
     private final UserService userService;
+    private final AdminService adminService;
 
-    public ConversationRouter(AuthService authService, UserService userService) {
+    public ConversationRouter(AuthService authService, UserService userService, AdminService adminService) {
         this.authService = authService;
         this.userService = userService;
+        this.adminService = adminService;
     }
 
     public void handleMessage(Message message, Conversation conv, CommandContext ctx, ConversationManager convMgr) throws Exception {
         if (conv.getState() == ConversationState.AWAITING_PASSWORD) {
             handlePassword(message, conv, ctx, convMgr);
+            return;
+        }
+        if (conv.getState() == ConversationState.SETTING_VAULT) {
+            handleSettingVault(message, conv, ctx, convMgr);
             return;
         }
     }
@@ -61,4 +68,14 @@ public class ConversationRouter {
             }
         }
     }
+    public void handleSettingVault(Message message, Conversation conv, CommandContext ctx, ConversationManager convMgr) throws SQLException {
+        long tgId = message.getFrom().getId();
+        long chatId = message.getChatId();
+
+        //check if user is admin
+        ctx.bot.sendText(chatId, "exiting");
+
+        convMgr.endConversation(tgId);
+
+        }
 }

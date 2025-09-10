@@ -12,7 +12,8 @@ public class VaultService {
     }
     public boolean setVault(int usd, int gold){
         try(Connection conn = Database.getConnection()){
-            return vaultDao.setVault(conn, usd, gold);
+//            return vaultDao.setVault(conn, usd, gold);
+            return false;
         } catch (Exception e){
             throw new RuntimeException(e);
         }

@@ -14,7 +14,15 @@ public class AdminDaoImpl implements AdminDao {
 
     @Override
     public boolean isAdmin(Connection conn, long TelegramId) throws SQLException {
-        return false;
+        String sql = "SELECT telegram_id FROM admins WHERE telegram_id = ?";
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setLong(1, TelegramId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return rs.getLong("telegram_id") == TelegramId;
+            }
+            return false;
+        }
     }
 
     @Override

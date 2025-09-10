@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS vault_state (
-    price_per_g INTEGER,
     gold_g BIGINT,
+    price_per_g INTEGER,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_by BIGINT,
     version BIGINT DEFAULT 1

@@ -14,7 +14,7 @@ public class VaultDaoImpl implements VaultDao {
     }
 
     @Override
-    public boolean setVault(Connection conn, double usd, int gold) throws SQLException {
+    public boolean setVault(Connection conn, long goldG, int pricePerG, long tgId, String version) throws SQLException {
         String seqSql = "SELECT COALESCE(MAX(id), 0) + 1 AS next_id FROM vault";
         int nextId;
         try (PreparedStatement ps = conn.prepareStatement(seqSql)) {
@@ -22,10 +22,12 @@ public class VaultDaoImpl implements VaultDao {
             rs.next();
             nextId = rs.getInt("next_id");
         }
-        String sql = "INSERT INTO vault (id, gold) VALUES (?, ?)";
+        String sql = "INSERT INTO vault_state (gold_g, price_per_g, updated_by, version) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, nextId);
-            ps.setInt(2, gold);
+            ps.setLong(1, goldG);
+            ps.setInt(2, pricePerG);
+            ps.setLong(3, tgId);
+            ps.setString(4, version);
             int rows = ps.executeUpdate();
             return rows == 1;
         }
