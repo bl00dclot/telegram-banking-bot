@@ -9,6 +9,8 @@ public class ConversationManager {
 
     public ConversationManager(long timeoutSeconds) {
         this.timeoutSeconds = timeoutSeconds;
+        //periodic clean-up
+//                scheduler.scheduleAtFixedRate(this::cleanupExpired, timeoutSeconds, timeoutSeconds, TimeUnit.SECONDS);
     }
 
     public void startConversation(long telegramId, Conversation conv) {
@@ -24,6 +26,9 @@ public class ConversationManager {
         }, timeoutSeconds, TimeUnit.SECONDS);
     }
     public Conversation getConversation(long telegramId){
+//    	if (c != null) {
+//            // optional cleanup
+//        }
         return map.get(telegramId);
     }
     public void endConversation(long telegramId){
@@ -32,4 +37,21 @@ public class ConversationManager {
     public void shutdown(){
         scheduler.shutdownNow();
     }
+/*
+ *     private void scheduleExpiry(long tgId) {
+        scheduler.schedule(() -> {
+            Conversation c = convs.get(tgId);
+            if (c != null && c.getStatus() == Conversation.Status.ACTIVE) {
+                // expire
+                convs.remove(tgId);
+                // call onCancel to notify user
+                // You need a CommandContext factory or store ctx inside conv snapshot
+            }
+        }, timeoutSeconds, TimeUnit.SECONDS);
+    }
+
+    private void cleanupExpired() {
+        // optional: iterate and remove stale by last-active timestamp
+    }
+ * */    
 }

@@ -1,4 +1,4 @@
-package com.discryptment.commands.user.vault;
+package com.discryptment.commands.admin.vault;
 
 import com.discryptment.bot.conversation.Conversation;
 import com.discryptment.bot.conversation.ConversationManager;

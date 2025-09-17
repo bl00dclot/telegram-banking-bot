@@ -11,7 +11,7 @@ import com.discryptment.commands.user.auth.LoginCommand;
 import com.discryptment.commands.user.profile.AddGoldCommand;
 import com.discryptment.commands.user.profile.ProfileCommand;
 import com.discryptment.commands.StartCommand;
-import com.discryptment.commands.user.vault.SetVaultCommand;
+import com.discryptment.commands.admin.vault.SetVaultCommand;
 import com.discryptment.db.Database;
 import com.discryptment.db.dao.ConfigDao;
 import com.discryptment.db.dao.UserDao;
