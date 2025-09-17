@@ -3,7 +3,7 @@ package com.discryptment.bot.conversation;
 import java.util.concurrent.*;
 
 public class ConversationManager {
-    private final ConcurrentMap<Long, Conversation> map = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Long, ConversationInterface> map = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final long timeoutSeconds;
 
@@ -13,11 +13,11 @@ public class ConversationManager {
 //                scheduler.scheduleAtFixedRate(this::cleanupExpired, timeoutSeconds, timeoutSeconds, TimeUnit.SECONDS);
     }
 
-    public void startConversation(long telegramId, Conversation conv) {
+    public void startConversation(long telegramId, ConversationInterface conv) {
         map.put(telegramId, conv);
         //schedule remove
         scheduler.schedule(() -> {
-            Conversation c = map.get(telegramId);
+            ConversationInterface c = map.get(telegramId);
 
             if (c != null && c == conv) {
                 map.remove(telegramId, conv);
@@ -25,7 +25,7 @@ public class ConversationManager {
             }
         }, timeoutSeconds, TimeUnit.SECONDS);
     }
-    public Conversation getConversation(long telegramId){
+    public ConversationInterface getConversation(long telegramId){
 //    	if (c != null) {
 //            // optional cleanup
 //        }
@@ -33,6 +33,10 @@ public class ConversationManager {
     }
     public void endConversation(long telegramId){
         map.remove(telegramId);
+    }
+    public void touch(long tgId) {
+        // update last-active timestamp if you store it for expiration
+        // implement per-conversation metadata if needed
     }
     public void shutdown(){
         scheduler.shutdownNow();

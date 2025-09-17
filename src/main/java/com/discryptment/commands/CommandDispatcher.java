@@ -2,6 +2,7 @@ package com.discryptment.commands;
 
 import com.discryptment.bot.SessionManager;
 import com.discryptment.bot.conversation.Conversation;
+import com.discryptment.bot.conversation.ConversationInterface;
 import com.discryptment.bot.conversation.ConversationManager;
 import com.discryptment.bot.conversation.ConversationRouter;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -60,19 +61,24 @@ public class CommandDispatcher {
         if (text.isEmpty()) return false;
 
         // Check if user is in an active conversation
-        Conversation conv = convMgr.getConversation(tgId);
+        ConversationInterface conv = convMgr.getConversation(tgId);
         if (conv != null) {
             // If the message is a slash command, try to run it (respect adminOnly)
             if (text.startsWith("/")) {
-                String[] parts = text.split("\\s+");
+                
+            	String[] parts = text.split("\\s+");
                 String token = parts[0].toLowerCase();
+                
+                Set<String> safeCommands = Set.of("/cancel", "/help");
                 BotCommand cmd = commands.get(token);
+                
                 if (cmd != null) {
                     // /start requirement: only allow non-/start commands after session started
                     if (!token.equals("/start") && !sessionManager.hasStarted(tgId)) {
                         ctx.bot.sendText(msg.getChatId(), "👉 Please send /start first to begin.");
                         return true;
                     }
+                    
                     if (cmd.adminOnly() && !adminList.contains(msg.getFrom().getId())) {
                         ctx.bot.sendText(msg.getChatId(), "⛔ This command is admin-only.");
                         return true;
