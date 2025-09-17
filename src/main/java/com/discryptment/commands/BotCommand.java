@@ -10,6 +10,11 @@ public interface BotCommand {
 
     /** whether only the configured admin may run this */
     default boolean adminOnly() { return false; }
+    
+    /** checks if the user is in a conversation */
+    // TODO: need to be implemented
+    default boolean startsConversation() { return false; }
+
 
     /**
      * Execute the command.

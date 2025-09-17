@@ -50,7 +50,7 @@ public class Main {
 
             //Conversation init
             ConversationManager convMgr = new ConversationManager(30);
-            ConversationRouter convRouter = new ConversationRouter(authService, userService, adminService);
+            ConversationRouter convRouter = new ConversationRouter();
 
             //Session init
             SessionManager sessionManager = new SessionManager();
@@ -64,7 +64,7 @@ public class Main {
             //Register cmds
             dispatcher.register(new StartCommand());
             dispatcher.register(new CancelCommand());
-            dispatcher.register(new LoginCommand(convMgr, 3));
+            dispatcher.register(new LoginCommand(convMgr, authService, userService));
             dispatcher.register(new ProfileCommand());
             dispatcher.register(new AddGoldCommand());
             dispatcher.register(new SetVaultCommand(convMgr));

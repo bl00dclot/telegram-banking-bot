@@ -90,7 +90,6 @@ public class LoginConversation implements ConversationInterface {
                     return true;
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
             ctx.bot.sendText(msg.getChatId(), "Internal error while verifying credentials. Please try again later.");
