@@ -49,7 +49,7 @@ public class LoginCommand implements BotCommand {
 
 		// Start login conversation (inject services needed)
 		LoginConversation conv = new LoginConversation(tgId, authService, userService);
-		convMgr.startConversation(tgId, conv);
+		convMgr.startConversation(tgId, conv, ctx);
 
 		System.out.println(username + " is logging");
 

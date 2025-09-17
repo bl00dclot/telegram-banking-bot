@@ -1,6 +1,7 @@
 package com.discryptment.commands;
 
 import com.discryptment.bot.conversation.Conversation;
+import com.discryptment.bot.conversation.ConversationInterface;
 import com.discryptment.bot.conversation.ConversationManager;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
@@ -23,7 +24,7 @@ public class CancelCommand implements BotCommand {
 
         ConversationManager convMgr = ctx.getConversationManager();
 
-        Conversation conv = convMgr.getConversation(tgId);
+        ConversationInterface conv = convMgr.getConversation(tgId);
         if (conv == null) {
             ctx.bot.sendText(chatId, "There is no active operation to cancel.");
             return;

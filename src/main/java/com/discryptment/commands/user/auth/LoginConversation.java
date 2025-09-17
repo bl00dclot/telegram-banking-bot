@@ -31,7 +31,7 @@ public class LoginConversation implements ConversationInterface {
 
 	@Override
 	public void onStart(CommandContext ctx) {
-		ctx.bot.sendText(tgId, "Please enter your password. You have" + attemptsLeft + " attempts. /cancel to exit");
+		ctx.bot.sendText(tgId, "Please enter your password. You have " + attemptsLeft + " attempts. /cancel to exit");
 	}
 
 	@Override

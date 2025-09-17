@@ -2,6 +2,8 @@ package com.discryptment.bot.conversation;
 
 import java.util.concurrent.*;
 
+import com.discryptment.commands.CommandContext;
+
 public class ConversationManager {
     private final ConcurrentMap<Long, ConversationInterface> map = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -13,8 +15,10 @@ public class ConversationManager {
 //                scheduler.scheduleAtFixedRate(this::cleanupExpired, timeoutSeconds, timeoutSeconds, TimeUnit.SECONDS);
     }
 
-    public void startConversation(long telegramId, ConversationInterface conv) {
+    public void startConversation(long telegramId, ConversationInterface conv, CommandContext ctx) {
         map.put(telegramId, conv);
+        conv.onStart(ctx);
+
         //schedule remove
         scheduler.schedule(() -> {
             ConversationInterface c = map.get(telegramId);
