@@ -66,7 +66,7 @@ public class CommandDispatcher {
 		if (conv != null) {
 			// If the message is a slash command, try to run it (respect adminOnly)
 			if (text.startsWith("/")) {
-		        // 1) Allowed: explicit safe commands
+				// 1) Allowed: explicit safe commands
 
 				if (cmd != null && safeCmds.contains(token)) {
 
@@ -84,25 +84,25 @@ public class CommandDispatcher {
 					}
 					return true;
 				}
-		        // 2) Known but not allowed during conversation => friendly error
+				// 2) Known but not allowed during conversation => friendly error
 				if (cmd != null) {
-		            // Command exists but is blocked while in conversation
-		            String allowed = String.join(", ", safeCmds);
-		            ctx.bot.sendText(msg.getChatId(),
-		                "⚠️ That command cannot be used while you are in an active operation.\n"
-		              + "Finish the current flow or send /cancel. Allowed quick commands: " + (allowed.isEmpty() ? "/cancel" : allowed));
-		            return true;
-		        }
+					// Command exists but is blocked while in conversation
+					String allowed = String.join(", ", safeCmds);
+					ctx.bot.sendText(msg.getChatId(),
+							"⚠️ That command cannot be used while you are in an active operation.\n"
+									+ "Finish the current flow or send /cancel. Allowed quick commands: "
+									+ (allowed.isEmpty() ? "/cancel" : allowed));
+					return true;
+				}
 				// 3) Unknown slash command
-		        String allowed = String.join(", ", safeCmds);
-		        ctx.bot.sendText(msg.getChatId(),
-		            "❓ Unknown command. Allowed quick commands while in this flow: " + (allowed.isEmpty() ? "/cancel" : allowed)
-		          + ". Use /help to list all commands.");
-		        return true;
-				
+				String allowed = String.join(", ", safeCmds);
+				ctx.bot.sendText(msg.getChatId(), "❓ Unknown command. Allowed quick commands while in this flow: "
+						+ (allowed.isEmpty() ? "/cancel" : allowed) + ". Use /help to list all commands.");
+				return true;
+
 			}
 
-		    // Not a slash command — route into conversation
+			// Not a slash command — route into conversation
 
 			try {
 				convRouter.handleMessage(msg, conv, ctx, convMgr);
@@ -158,7 +158,8 @@ public class CommandDispatcher {
 	public void register(BotCommand cmd) {
 		commands.put(cmd.name().toLowerCase(), cmd);
 	}
-	public Map<String, BotCommand> getCmds(){
+
+	public Map<String, BotCommand> getCmds() {
 		return this.commands;
 	}
 }

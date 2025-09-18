@@ -15,6 +15,7 @@ public class LoginCommand implements BotCommand {
 	private final ConversationManager convMgr;
 	private final AuthService authService;
 	private final UserService userService;
+
 	public LoginCommand(ConversationManager convMgr, AuthService authService, UserService userService) {
 		this.convMgr = convMgr;
 		this.authService = authService;
@@ -30,25 +31,20 @@ public class LoginCommand implements BotCommand {
 	public String description() {
 		return "Login - start login flow";
 	}
-	public boolean startsConversation() {return true;}
+
+	public boolean startsConversation() {
+		return true;
+	}
 
 	@Override
 	public void execute(Message msg, String[] args, CommandContext ctx) throws Exception {
 
 		long tgId = msg.getFrom().getId();
 		String username = msg.getFrom().getUserName();
-
-		// If already in conversation, inform user
-		// !!! TEMPORARY FIX
-		ConversationInterface existing = convMgr.getConversation(tgId);
-		if (existing != null) {
-			ctx.bot.sendText(msg.getChatId(), "You are already in a conversation. Use /cancel to stop it first.");
-			return;
-		}
-
+		
 		// Start login conversation (inject services needed)
 		LoginConversation conv = new LoginConversation(tgId, authService, userService);
-		convMgr.startConversation(tgId, conv, ctx);
+		convMgr.startConversation(tgId, conv, ctx, msg.getChatId());
 
 		System.out.println(username + " is logging");
 

@@ -36,7 +36,7 @@ public class Main {
 
 		EnvReader.init("src/main/resources", ".env");
 		String botToken = EnvReader.get("BOT_TOKEN");
-		Set<String> safeCmds = new HashSet<>(Arrays.asList("/cancel"));
+		Set<String> safeCmds = new HashSet<>(Arrays.asList("/cancel", "/help"));
 
 		// Start Polling
 		TelegramBotsLongPollingApplication botsApi = new TelegramBotsLongPollingApplication();
@@ -75,7 +75,6 @@ public class Main {
 			dispatcher.register(new AddGoldCommand());
 			dispatcher.register(new SetVaultCommand(convMgr));
 			dispatcher.register(new HelpCommand(dispatcher.getCmds(), adminService));
-
 
 			// Inject in bot
 			bot.setDispatcher(dispatcher);

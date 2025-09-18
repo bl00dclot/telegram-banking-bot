@@ -68,6 +68,13 @@ public class AuthService {
             throw new RuntimeException(e);
         }
     }
+    public boolean isAuthorized(long telegramId) throws SQLException{
+    	try(Connection conn = Database.getConnection()){
+    		return userDao.isAuthorized(conn, telegramId);
+    	} catch (Exception e) {
+    		throw new RuntimeException(e);
+    	}
+    }
     public long getAdmin() throws SQLException{
         try(Connection conn = Database.getConnection()){
             Optional<Config> cfg = configDao.getConfig(conn);

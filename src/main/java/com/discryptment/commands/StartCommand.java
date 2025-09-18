@@ -23,8 +23,7 @@ public class StartCommand implements BotCommand {
 //        System.out.println(user.getUsername());
 
 
-        // service will open/close DB connection internally
-//        ctx.userService.registerUser(user);
+        
 
         StringBuilder sb = new StringBuilder();
         sb.append("Welcome to the Banking Bot").append("\n\n");

@@ -20,6 +20,7 @@ public interface UserDao {
     boolean updateExpectedUsdBalance(Connection conn, int userId, int deltaExpectedUsd) throws SQLException;
 
     void setAuthorized(Connection conn, int userId, boolean authorized) throws SQLException;
+    boolean isAuthorized(Connection conn, long telegramId) throws SQLException;
     List<User> listAll(Connection conn) throws SQLException;
 }
 

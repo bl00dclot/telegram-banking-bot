@@ -15,7 +15,7 @@ public class ConversationManager {
 //                scheduler.scheduleAtFixedRate(this::cleanupExpired, timeoutSeconds, timeoutSeconds, TimeUnit.SECONDS);
     }
 
-    public void startConversation(long telegramId, ConversationInterface conv, CommandContext ctx) {
+    public void startConversation(long telegramId, ConversationInterface conv, CommandContext ctx, long chatId) {
         map.put(telegramId, conv);
         conv.onStart(ctx);
 
@@ -26,6 +26,7 @@ public class ConversationManager {
             if (c != null && c == conv) {
                 map.remove(telegramId, conv);
                 //optionally notify user about timeout via bot client
+                ctx.bot.sendText(chatId, "Operation time-out");
             }
         }, timeoutSeconds, TimeUnit.SECONDS);
     }

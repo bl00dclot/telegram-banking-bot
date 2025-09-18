@@ -1,29 +1,36 @@
 package com.discryptment.commands;
+
 import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 public interface BotCommand {
-    /** primary command token, e.g. "/start" */
-    String name();
+	/** primary command token, e.g. "/start" */
+	String name();
 
-    /** short help for /help listing */
-    String description();
+	/** short help for /help listing */
+	String description();
 
-    /** whether only the configured admin may run this */
-    default boolean adminOnly() { return false; }
-    
-    /** checks if the user is in a conversation */
-    default boolean startsConversation() { return false; }
+	/** whether only the configured admin may run this */
+	default boolean adminOnly() {
+		return false;
+	}
 
-    /*TODO: Future implementation of setting SafeCmds*/
-    default boolean safeDuringConversation() { return false; }
+	/** checks if the user is in a conversation */
+	default boolean startsConversation() {
+		return false;
+	}
 
+	/* TODO: Future implementation of setting SafeCmds */
+	default boolean safeDuringConversation() {
+		return false;
+	}
 
-    /**
-     * Execute the command.
-     * @param message the incoming Telegram Message (guaranteed to be text)
-     * @param args parsed arguments (split by whitespace, excluding the command token)
-     * @param ctx services & bot helpers
-     */
-    void execute(Message message, String[] args, CommandContext ctx) throws Exception;
+	/**
+	 * Execute the command.
+	 * 
+	 * @param message the incoming Telegram Message (guaranteed to be text)
+	 * @param args    parsed arguments (split by whitespace, excluding the command
+	 *                token)
+	 * @param ctx     services & bot helpers
+	 */
+	void execute(Message message, String[] args, CommandContext ctx) throws Exception;
 }
-
