@@ -12,8 +12,10 @@ public interface BotCommand {
     default boolean adminOnly() { return false; }
     
     /** checks if the user is in a conversation */
-    // TODO: need to be implemented
     default boolean startsConversation() { return false; }
+
+    /*TODO: Future implementation of setting SafeCmds*/
+    default boolean safeDuringConversation() { return false; }
 
 
     /**

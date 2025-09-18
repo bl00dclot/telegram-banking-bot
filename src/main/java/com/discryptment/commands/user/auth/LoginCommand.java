@@ -1,9 +1,7 @@
 package com.discryptment.commands.user.auth;
 
-import com.discryptment.bot.conversation.Conversation;
 import com.discryptment.bot.conversation.ConversationInterface;
 import com.discryptment.bot.conversation.ConversationManager;
-import com.discryptment.bot.conversation.ConversationState;
 import com.discryptment.commands.BotCommand;
 import com.discryptment.commands.CommandContext;
 import com.discryptment.service.AuthService;
@@ -32,6 +30,7 @@ public class LoginCommand implements BotCommand {
 	public String description() {
 		return "Login - start login flow";
 	}
+	public boolean startsConversation() {return true;}
 
 	@Override
 	public void execute(Message msg, String[] args, CommandContext ctx) throws Exception {
@@ -53,22 +52,5 @@ public class LoginCommand implements BotCommand {
 
 		System.out.println(username + " is logging");
 
-//        long chatId = message.getChatId();
-//
-//
-//        Conversation conv = new Conversation();
-//        conv.setTelegramId(telegramId);
-//        conv.setState(ConversationState.AWAITING_PASSWORD);
-//        conv.setAttemptsLeft(maxAttempts);
-//        conv.setStartedAt(System.currentTimeMillis());
-//        conv.setData(new HashMap<>());
-//
-//        convMgr.startConversation(telegramId, conv);
-//        System.out.println(username + " is logging");
-//
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Enter password (you have ").append(maxAttempts).append(" attempts)");
-//
-//        ctx.bot.sendText(chatId, sb.toString());
 	}
 }

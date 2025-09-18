@@ -7,6 +7,7 @@ import com.discryptment.bot.conversation.ConversationRouter;
 import com.discryptment.commands.CancelCommand;
 import com.discryptment.commands.CommandContext;
 import com.discryptment.commands.CommandDispatcher;
+import com.discryptment.commands.HelpCommand;
 import com.discryptment.commands.user.auth.LoginCommand;
 import com.discryptment.commands.user.profile.AddGoldCommand;
 import com.discryptment.commands.user.profile.ProfileCommand;
@@ -21,66 +22,72 @@ import com.discryptment.service.AdminService;
 import com.discryptment.service.AuthService;
 import com.discryptment.service.UserService;
 import com.discryptment.util.EnvReader;
-import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 
-        EnvReader.init("src/main/resources", ".env");
-        String botToken = EnvReader.get("BOT_TOKEN");
+		EnvReader.init("src/main/resources", ".env");
+		String botToken = EnvReader.get("BOT_TOKEN");
+		Set<String> safeCmds = new HashSet<>(Arrays.asList("/cancel"));
 
-        //Start Polling
-        TelegramBotsLongPollingApplication botsApi = new TelegramBotsLongPollingApplication();
-        // Using try-with-resources to allow autoclose to run upon finishing
-        try {
-            //DB init
-            Database.init();
+		// Start Polling
+		TelegramBotsLongPollingApplication botsApi = new TelegramBotsLongPollingApplication();
+		// Using try-with-resources to allow autoclose to run upon finishing
+		try {
+			// DB init
+			Database.init();
 
-            // DAO init
-            UserDao userDao = new UserDaoImpl();
-            ConfigDao configDao = new ConfigDaoImpl();
+			// DAO init
+			UserDao userDao = new UserDaoImpl();
+			ConfigDao configDao = new ConfigDaoImpl();
 
-            // Services init
-            UserService userService = new UserService(userDao, configDao);
-            AuthService authService = new AuthService();
-            AdminService adminService = new AdminService();
+			// Services init
+			UserService userService = new UserService(userDao, configDao);
+			AuthService authService = new AuthService();
+			AdminService adminService = new AdminService();
 
-            //Conversation init
-            ConversationManager convMgr = new ConversationManager(30);
-            ConversationRouter convRouter = new ConversationRouter();
+			// Conversation init
+			ConversationManager convMgr = new ConversationManager(30);
+			ConversationRouter convRouter = new ConversationRouter();
 
-            //Session init
-            SessionManager sessionManager = new SessionManager();
+			// Session init
+			SessionManager sessionManager = new SessionManager();
 
-            // Bot init
-            BankingBot bot = new BankingBot(botToken);
-            CommandContext ctx = new CommandContext(bot, convMgr, userService, authService);
-            CommandDispatcher dispatcher = new CommandDispatcher(adminService.adminList(), convMgr, convRouter, sessionManager);
+			// Bot init
+			BankingBot bot = new BankingBot(botToken);
+			CommandContext ctx = new CommandContext(bot, convMgr, userService, authService);
+			CommandDispatcher dispatcher = new CommandDispatcher(adminService.adminList(), convMgr, convRouter,
+					sessionManager, safeCmds);
+
+			// Register cmds
+			dispatcher.register(new StartCommand());
+			dispatcher.register(new CancelCommand());
+			dispatcher.register(new LoginCommand(convMgr, authService, userService));
+			dispatcher.register(new ProfileCommand());
+			dispatcher.register(new AddGoldCommand());
+			dispatcher.register(new SetVaultCommand(convMgr));
+			dispatcher.register(new HelpCommand(dispatcher.getCmds(), adminService));
 
 
-            //Register cmds
-            dispatcher.register(new StartCommand());
-            dispatcher.register(new CancelCommand());
-            dispatcher.register(new LoginCommand(convMgr, authService, userService));
-            dispatcher.register(new ProfileCommand());
-            dispatcher.register(new AddGoldCommand());
-            dispatcher.register(new SetVaultCommand(convMgr));
+			// Inject in bot
+			bot.setDispatcher(dispatcher);
+			bot.setContext(ctx);
 
-
-            //Inject in bot
-            bot.setDispatcher(dispatcher);
-            bot.setContext(ctx);
-
-            // Register bot
-            botsApi.registerBot(botToken, bot);
-            System.out.println("Banking bot started");
-            // Ensure this prcess wait forever
-            Thread.currentThread().join();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+			// Register bot
+			botsApi.registerBot(botToken, bot);
+			System.out.println("Banking bot started");
+			// Ensure this prcess wait forever
+			Thread.currentThread().join();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
