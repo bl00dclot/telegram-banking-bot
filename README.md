@@ -31,18 +31,9 @@ A private **Telegram banking bot** for managing a central vault (USD + Gold), us
 ## 🔧 Commands
 
 ### User
-- `/start` – authenticate
+- `/start` – start the bot
 - `/profile` – view balances
-- `/withdraw <amount> <currency>`
-- `/invoice create <name> <gold> <expected_usd> <received_usd>`
-- `/invoice list`
-
-### Admin
-- `/admin vault`
-- `/admin setvault <usd> <gold>`
-- `/admin setbalance <user_id> <gold> <real_usd> <expected_usd>`
-- `/admin listusers`
-- `/admin invoices <user_id>`
+- `/login` – login
 
 ---
 
